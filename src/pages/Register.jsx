@@ -6,11 +6,12 @@ import {  ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc,set } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
 import {db} from "../firebase"
+import { useNavigate , Link} from "react-router-dom";
 
 const Register = () =>{
     const [err, setErr] = useState(false);
     const [loading, setLoading] = useState(false);
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
   
     const handleSubmit = async (e) => {
       setLoading(true);
@@ -37,7 +38,7 @@ const Register = () =>{
                 photoURL: downloadURL,
               });
               //create user on firestore
-              await setDoc(doc(db, "users", res.user.uid), {
+              await setDoc(doc(db, "users", res.user.uid), { // (database name, collection name, document name)
                 uid: res.user.uid,
                 displayName,
                 email,
@@ -46,7 +47,7 @@ const Register = () =>{
   
               //create empty user chats on firestore
               await setDoc(doc(db, "userChats", res.user.uid), {});
-            //   navigate("/");
+              navigate("/");
             } catch (err) {
               console.log(err);
               setErr(true);
@@ -77,7 +78,7 @@ const Register = () =>{
                     </label>
                     <button>Sign Up</button>
                     {err && <span>Something went wrong</span>}
-                    <p>You do have an account? Login</p>
+                    <p>You do have an account? <Link to="/login">Login</Link></p>
                 </form>
             </div>
         </div>
